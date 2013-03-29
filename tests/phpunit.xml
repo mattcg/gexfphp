@@ -43,6 +43,7 @@
 		</testsuite>
 		<testsuite name="Edge tests">
 			<file>src/MattCG/Gexf/EdgeTypeTest.php</file>
+			<file>src/MattCG/Gexf/EdgeShapeTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
