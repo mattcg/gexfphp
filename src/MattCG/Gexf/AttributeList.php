@@ -96,7 +96,9 @@ class AttributeList implements \Iterator, \ArrayAccess, \SeekableIterator, \Coun
 	}
 
 	public function createAttribute(AttributeType $type, $title = null) {
-		$this->addAttribute(Uuid::uuid4()->toString(), $type, $title);
+		$id = Uuid::uuid4()->toString();
+		$this->addAttribute($id, $type, $title);
+		return $this->attrs[$id];
 	}
 
 	public function getAttributeClass() {

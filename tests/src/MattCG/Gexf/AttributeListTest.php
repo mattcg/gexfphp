@@ -96,4 +96,11 @@ class AttributeListTest extends PHPUnit_Framework_TestCase {
 			$this->fail('ID should be valid UUID.');
 		}
 	}
+
+	public function testCreateAttributeReturnsAttribute() {
+		$attrtype = new AttributeType(AttributeType::TYPE_INTEGER);
+		$attrlist = new AttributeList(new AttributeClass());
+		$attr = $attrlist->createAttribute($attrtype);
+		$this->assertInstanceOf('MattCG\Gexf\Attribute', $attr);
+	}
 }
