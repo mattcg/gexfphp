@@ -86,7 +86,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 	public function testCreateValue() {
 		$value = 'somevalue';
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attrvalue = $attr->createValue($value);
 		$this->assertEquals($attr, $attrvalue->getAttribute());
 		$this->assertEquals($value, $attrvalue->getValue());
@@ -96,7 +96,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testCannotPassScalarToSetOptions() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setOptions('someoption1');
 	}
 
@@ -104,13 +104,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testCannotPassNullToSetOptions() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setOptions(null);
 	}
 
 	public function testGetOptions() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setOptions($options);
 		$this->assertTrue(is_array($attr->getOptions()));
 		$this->assertNotEmpty($attr->getOptions());
@@ -119,7 +119,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 	public function testSetOptionsForStringAttribute() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setOptions($options);
 		$this->assertEquals($options, $attr->getOptions());
 	}
@@ -128,13 +128,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCannotSetNonStringOptionsForStringAttribute() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setOptions(array(1, 2, 3));
 	}
 
 	public function testAddOptionForStringAttribute() {
 		$option = 'someoption1';
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->addOption($option);
 		$this->assertEquals(array($option), $attr->getOptions());
 	}
@@ -143,13 +143,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCannotAddNonStringOptionForStringAttribute() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->addOption(1);
 	}
 
 	public function testSetOptionsForIntegerAttribute() {
 		$options = array(1, 2, 3);
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setOptions($options);
 		$this->assertEquals($options, $attr->getOptions());
 	}
@@ -158,13 +158,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCannotSetNonIntegerOptionsForIntegerAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setOptions(array(1.1, 1.2, 1.3));
 	}
 
 	public function testAddOptionForIntegerAttribute() {
 		$option = 1;
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->addOption($option);
 		$this->assertEquals(array($option), $attr->getOptions());
 	}
@@ -173,13 +173,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCannotAddNonIntegerOptionForIntegerAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->addOption(1.1);
 	}
 
 	public function testSetOptionsForFloatAttribute() {
 		$options = array(1.1, 1.2, 1.3);
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$attr->setOptions($options);
 		$this->assertEquals($options, $attr->getOptions());
 	}
@@ -188,13 +188,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCannotSetNonFloatOptionsForFloatAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$attr->setOptions(array(1, 1, 1));
 	}
 
 	public function testAddOptionForFloatAttribute() {
 		$option = 1.1;
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$attr->addOption($option);
 		$this->assertEquals(array($option), $attr->getOptions());
 	}
@@ -203,13 +203,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCannotAddNonFloatOptionForFloatAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$attr->addOption(1);
 	}
 
 	public function testSetOptionsForListstringAttribute() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setOptions($options);
 		$this->assertEquals($options, $attr->getOptions());
 	}
@@ -219,13 +219,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCannotSetNonStringOptionsForListstringAttribute() {
 		$options = array('someoption1', 2, 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setOptions($options);
 	}
 
 	public function testAddOptionForListstringAttribute() {
 		$option = 'someoption1';
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->addOption($option);
 		$this->assertEquals(array($option), $attr->getOptions());
 	}
@@ -235,7 +235,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCannotAddNonStringOptionForListstringAttribute() {
 		$option = 1;
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->addOption($option);
 	}
 
@@ -243,12 +243,12 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException LogicException
 	 */
 	public function testCannotSetOptionsForBooleanAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN));
 		$attr->setOptions(array(true, false));
 	}
 
 	public function testSetOptionsWithEmptyArrayIsANoopForBooleanAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN));
 
 		try {
 			$attr->setOptions(array());
@@ -262,12 +262,12 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException LogicException
 	 */
 	public function testCannotAddOptionForBooleanAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN));
 		$attr->addOption(true);
 	}
 
 	public function testClearOptionsIsANoopForBooleanAttribute() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN));
 
 		try {
 			$attr->clearOptions();
@@ -279,14 +279,14 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 	public function testPassingEmptyArrayToSetOptionsClearsThem() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setOptions($options);
 		$attr->setOptions(array());
 		$this->assertEquals(array(), $attr->getOptions());
 	}
 
 	public function testClearOptions() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setOptions(array('someoption1', 'someoption2', 'someoption3'));
 		$this->assertTrue($attr->hasOptions());
 		$attr->clearOptions();
@@ -294,7 +294,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testHasOptions() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$this->assertFalse($attr->hasOptions());
 		$attr->setOptions(array('someoption1', 'someoption2', 'someoption3'));
 		$this->assertTrue($attr->hasOptions());
@@ -306,7 +306,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 		// Test with strings
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$this->assertFalse($attr->hasOption('nonexistent'));
 		$attr->setOptions($options);
 		$this->assertFalse($attr->hasOption('nonexistent'));
@@ -316,7 +316,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 		// Test with integers
 		$options = array(1, 2, 3);
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$this->assertFalse($attr->hasOption(1));
 		$attr->setOptions($options);
 		$this->assertFalse($attr->hasOption(4));
@@ -326,7 +326,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 		// Test with floats
 		$options = array(1.1, 1.2, 1.3);
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$this->assertFalse($attr->hasOption(1.1));
 		$attr->setOptions($options);
 		$this->assertFalse($attr->hasOption(1.4));
@@ -336,7 +336,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 		// Test with liststring
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$this->assertFalse($attr->hasOption('someoption1'));
 		$attr->setOptions($options);
 		$this->assertFalse($attr->hasOption('someoption4'));
@@ -348,7 +348,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testSetDefaultValueToString() {
 		$defaultvalue = 'somevalue';
 		$this->assertTrue(is_string($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_STRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_STRING));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -359,13 +359,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testStringAttributeCannotHaveNonStringDefaultValue() {
 		$defaultvalue = 1;
 		$this->assertFalse(is_string($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_STRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_STRING));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
 	public function testSetDefaultValueToAnyUri() {
 		$defaultvalue = '/someuri';
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_ANYURI), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_ANYURI));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -376,14 +376,14 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testAnyUriAttributeCannotHaveNonAnyUriDefaultValue() {
 		$defaultvalue = 1;
 		$this->assertFalse(is_string($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_ANYURI), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_ANYURI));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
 	public function testSetDefaultValueToBoolean() {
 		$defaultvalue = false;
 		$this->assertTrue(is_bool($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -394,14 +394,14 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testBooleanAttributeCannotHaveNonBooleanDefaultValue() {
 		$defaultvalue = 'nonboolean';
 		$this->assertFalse(is_bool($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
 	public function testSetDefaultValueToDouble() {
 		$defaultvalue = 1.2e3;
 		$this->assertTrue(is_double($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_DOUBLE), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_DOUBLE));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -412,7 +412,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testDoubleAttributeCannotHaveNonDoubleDefaultValue() {
 		$defaultvalue = 1;
 		$this->assertFalse(is_double($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_DOUBLE), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_DOUBLE));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
@@ -421,7 +421,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 		// A float and a double are the same thing in PHP
 		$defaultvalue = 1.2e3;
 		$this->assertTrue(is_float($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -432,14 +432,14 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testFloatAttributeCannotHaveNonFloatDefaultValue() {
 		$defaultvalue = 1;
 		$this->assertFalse(is_float($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
 	public function testSetDefaultValueToInteger() {
 		$defaultvalue = 1;
 		$this->assertTrue(is_int($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -450,7 +450,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testIntegerAttributeCannotHaveNonIntegerDefaultValue() {
 		$defaultvalue = '1';
 		$this->assertFalse(is_int($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
@@ -459,7 +459,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 		// A long and an int are the same thing in PHP
 		$defaultvalue = 1;
 		$this->assertTrue(is_long($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -470,13 +470,13 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testLongAttributeCannotHaveNonLongDefaultValue() {
 		$defaultvalue = 1.2e3;
 		$this->assertFalse(is_long($defaultvalue));
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
 	public function testSetDefaultValueToListstring() {
 		$defaultvalue = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
@@ -486,7 +486,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testSetDefaultValueOnlyAcceptsArrayForListstring() {
 		$defaultvalue = 'someoption1';
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
@@ -495,30 +495,30 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testSetDefaultValueChecksAllOptionsForListString() {
 		$defaultvalue = array('someoption1', 1, 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setDefaultValue($defaultvalue);
 	}
 
 	public function testSettingDefaultValueToEmptyArrayClearsItForListstring() {
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setDefaultValue(array());
 		$this->assertNull($attr->getDefaultValue());
 	}
 
 	public function testSettingDefaultValueToNullClearsIt() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setDefaultValue(null);
 		$this->assertNull($attr->getDefaultValue());
 	}
 
 	public function testInitialDefaultValueIsNull() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$this->assertNull($attr->getDefaultValue());
 	}
 
 	public function testClearDefaultValue() {
 		$defaultvalue = 'somevalue';
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setDefaultValue($defaultvalue);
 		$attr->clearDefaultValue();
 		$this->assertNull($attr->getDefaultValue());
@@ -526,7 +526,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 	public function testHasDefaultValue() {
 		$defaultvalue = 'somevalue';
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$this->assertFalse($attr->hasDefaultValue());
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertTrue($attr->hasDefaultValue());
@@ -535,7 +535,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testSetDefaultValueToAvailableOption() {
 		$options = array(1.1, 1.2, 1.3);
 		$defaultvalue = 1.1;
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_FLOAT));
 		$attr->setOptions($options);
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
@@ -544,7 +544,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testSetDefaultValueToAvailableOptionForListstring() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
 		$defaultvalue = array($options[2], $options[1]);
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setOptions($options);
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
@@ -555,7 +555,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCannotSetDefaultValueToUnavailableOption() {
 		$options = array(1, 2, 3);
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setOptions($options);
 		$attr->setDefaultValue(4);
 	}
@@ -565,7 +565,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCannotClearOptionsWithDefaultValueSet() {
 		$options = array(1, 2, 3);
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setOptions($options);
 		$attr->setDefaultValue($options[1]);
 		$attr->clearOptions();
@@ -573,7 +573,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 	public function testClearOptionsIsANoopWithDefaultValueSetButNotOptions() {
 		$defaultvalue = 1;
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER));
 		$attr->setDefaultValue($defaultvalue);
 
 		try {
@@ -590,7 +590,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCannotSetDefaultValueToUnavailableOptionsForListString() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setOptions($options);
 		$attr->setDefaultValue(array('someoption4'));
 	}
@@ -600,7 +600,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCannotSetOptionsNotContainingCurrentDefaultValue() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType());
 		$attr->setDefaultValue('someoption4');
 		$attr->setOptions($options);
 	}
@@ -610,7 +610,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCannotSetOptionsNotContainingCurrentDefaultValueForListring() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
-		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
 		$attr->setDefaultValue(array('someoption4'));
 		$attr->setOptions($options);
 	}

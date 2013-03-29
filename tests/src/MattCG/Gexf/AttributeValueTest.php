@@ -18,19 +18,19 @@ class AttributeValueTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetAttribute() {
-		$attr = new Attribute(1, new AttributeType(), 'Title');
+		$attr = new Attribute(1, new AttributeType());
 		$attrvalue = new AttributeValue($attr);
 		$this->assertEquals($attr, $attrvalue->getAttribute());
 	}
 
 	public function testValueIsNullByDefault() {
-		$attr = new Attribute(1, new AttributeType(), 'Title');
+		$attr = new Attribute(1, new AttributeType());
 		$attrvalue = new AttributeValue($attr);
 		$this->assertNull($attrvalue->getValue());
 	}
 
 	public function testSetValue() {
-		$attr = new Attribute(1, new AttributeType(), 'Title');
+		$attr = new Attribute(1, new AttributeType());
 		$attrvalue = new AttributeValue($attr);
 		$value = 'somevalue';
 		$attrvalue->setValue($value);
@@ -41,7 +41,7 @@ class AttributeValueTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetValueValidatesType() {
-		$attr = new Attribute(1, new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr = new Attribute(1, new AttributeType(AttributeType::TYPE_INTEGER));
 		$attrvalue = new AttributeValue($attr);
 		$attrvalue->setValue('somestringvalue');
 	}
