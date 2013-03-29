@@ -35,6 +35,9 @@
 		<testsuite name="Attribute tests">
 			<file>src/MattCG/Gexf/AttributeTest.php</file>
 			<file>src/MattCG/Gexf/AttributeTypeTest.php</file>
+			<file>src/MattCG/Gexf/AttributeClassTest.php</file>
+			<file>src/MattCG/Gexf/AttributeValueTest.php</file>
+			<file>src/MattCG/Gexf/ModeTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

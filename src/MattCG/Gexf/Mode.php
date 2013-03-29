@@ -2,7 +2,7 @@
 
 namespace MattCG\Gexf;
 
-class Mode extends SplEnum {
+class Mode extends \SplEnum {
 	const __default = self::MODE_STATIC;
 
 	const MODE_STATIC = 'static';
