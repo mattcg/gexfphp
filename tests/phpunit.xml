@@ -25,10 +25,10 @@
 	</php>
 	<filter>
 		<blacklist>
-			<directory suffix=".php">vendor</directory>
+			<directory suffix=".php">../vendor</directory>
 		</blacklist>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">src</directory>
+			<directory suffix=".php">../src</directory>
 		</whitelist>
 	</filter>
 	<testsuites>
