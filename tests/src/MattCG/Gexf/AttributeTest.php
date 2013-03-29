@@ -9,18 +9,10 @@ use MattCG\Gexf\AttributeType;
 
 class AttributeTest extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testAttributeIdMayNotBeInteger() {
-		new Attribute(1, new AttributeType(), 'Title');
-	}
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testAttributeIdMayNotBeEmptyString() {
-		new Attribute('  ', new AttributeType(), 'Title');
+	public function testAttributeIdMayBeInteger() {
+		$id = 1;
+		$attr = new Attribute($id, new AttributeType(), 'Title');
+		$this->assertEquals($id, $attr->getId());
 	}
 
 	public function testAttributeIdMayBeString() {
@@ -32,6 +24,27 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testAttributeIdIsTrimmed() {
 		$attr = new Attribute('a ', new AttributeType(), 'Title');
 		$this->assertEquals('a', $attr->getId());
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAttributeIdMayNotBeEmptyString() {
+		new Attribute('  ', new AttributeType(), 'Title');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAttributeIdMayNotBeFloat() {
+		new Attribute(1.1, new AttributeType(), 'Title');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testAttributeIdMayNotBeBoolean() {
+		new Attribute(true, new AttributeType(), 'Title');
 	}
 
 	public function testGetAttributeType() {

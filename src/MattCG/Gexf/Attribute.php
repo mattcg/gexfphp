@@ -7,13 +7,15 @@ class Attribute {
 	private $id, $type, $title, $defaultvalue, $options;
 
 	public function __construct($id, AttributeType $type, $title = null) {
-		if (!is_string($id)) {
-			throw new \InvalidArgumentException('Attribute ID may only be string.');
+		if (!is_string($id) or !is_int($id)) {
+			throw new \InvalidArgumentException('Attribute ID may only be string or integer.');
 		}
 
-		$id = trim($id);
-		if (empty($id)) {
-			throw new \InvalidArgumentException('Attribute ID may not be empty.');
+		if (is_string($id)) {
+			$id = trim($id);
+			if (empty($id)) {
+				throw new \InvalidArgumentException('Attribute ID may not be empty.');
+			}
 		}
 
 		$this->id = $id;
