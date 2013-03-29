@@ -7,7 +7,7 @@ class Attribute {
 	private $id, $type, $title, $defaultvalue, $options;
 
 	public function __construct($id, AttributeType $type, $title = null) {
-		if (!is_string($id) or !is_int($id)) {
+		if (!is_string($id) and !is_int($id)) {
 			throw new \InvalidArgumentException('Attribute ID may only be string or integer.');
 		}
 
