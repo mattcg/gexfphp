@@ -41,5 +41,8 @@
 			<file>src/MattCG/Gexf/AttributeValueListTest.php</file>
 			<file>src/MattCG/Gexf/ModeTest.php</file>
 		</testsuite>
+		<testsuite name="Edge tests">
+			<file>src/MattCG/Gexf/EdgeTypeTest.php</file>
+		</testsuite>
 	</testsuites>
 </phpunit>
