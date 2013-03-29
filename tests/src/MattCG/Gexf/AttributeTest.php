@@ -82,9 +82,17 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @expectedException PHPUnit_Framework_Error
 	 */
-	public function testCannotPassNonArrayToSetOptions() {
+	public function testCannotPassScalarToSetOptions() {
 		$attr = new Attribute('someid', new AttributeType(), 'Title');
 		$attr->setOptions('someoption1');
+	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 */
+	public function testCannotPassNullToSetOptions() {
+		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr->setOptions(null);
 	}
 
 	public function testGetOptions() {
@@ -219,19 +227,41 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException RuntimeException
+	 * @expectedException LogicException
 	 */
 	public function testCannotSetOptionsForBooleanAttribute() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
 		$attr->setOptions(array(true, false));
 	}
 
+	public function testSetOptionsWithEmptyArrayIsANoopForBooleanAttribute() {
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+
+		try {
+			$attr->setOptions(array());
+			$this->assertFalse($attr->hasOptions());
+		} catch (LogicException $e) {
+			$this->fail('Passing empty array to setOptions should be a noop for boolean attributes.');
+		}
+	}
+
 	/**
-	 * @expectedException RuntimeException
+	 * @expectedException LogicException
 	 */
 	public function testCannotAddOptionForBooleanAttribute() {
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
-		$attr->setOptions(true);
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+		$attr->addOption(true);
+	}
+
+	public function testClearOptionsIsANoopForBooleanAttribute() {
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_BOOLEAN), 'Title');
+
+		try {
+			$attr->clearOptions();
+			$this->assertFalse($attr->hasOptions());
+		} catch (LogicException $e) {
+			$this->fail('Calling clearOptions should be a noop for boolean attributes.');
+		}
 	}
 
 	public function testPassingEmptyArrayToSetOptionsClearsThem() {
@@ -501,7 +531,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 	public function testSetDefaultValueToAvailableOptionForListstring() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
 		$defaultvalue = array($options[2], $options[1]);
-		$attr = new Attribute('someid', new AttributeType(), 'Title');
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING), 'Title');
 		$attr->setOptions($options);
 		$attr->setDefaultValue($defaultvalue);
 		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
@@ -515,6 +545,31 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
 		$attr->setOptions($options);
 		$attr->setDefaultValue(4);
+	}
+
+	/**
+	 * @expectedException LogicException
+	 */
+	public function testCannotClearOptionsWithDefaultValueSet() {
+		$options = array(1, 2, 3);
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr->setOptions($options);
+		$attr->setDefaultValue($options[1]);
+		$attr->clearOptions();
+	}
+
+	public function testClearOptionsIsANoopWithDefaultValueSetButNotOptions() {
+		$defaultvalue = 1;
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_INTEGER), 'Title');
+		$attr->setDefaultValue($defaultvalue);
+
+		try {
+			$attr->clearOptions();
+		} catch (LogicException $e) {
+			$this->fail('Exception should not be raised if no options are set.');
+		}
+
+		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
 
 	/**

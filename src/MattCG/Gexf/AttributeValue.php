@@ -19,7 +19,7 @@ class AttributeValue {
 	}
 
 	public function setValue($value) {
-		if (!$this->attr->canHaveValue($value)) {
+		if (!$this->attr->getAttributeType()->canHaveValue($value)) {
 			throw new \InvalidArgumentException('Cannot have value. Input was: ' . $value . '.');
 		}
 

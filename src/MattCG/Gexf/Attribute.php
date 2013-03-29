@@ -8,18 +8,18 @@ class Attribute {
 
 	public function __construct($id, AttributeType $type, $title = null) {
 		if (!is_string($id)) {
-			throw new \InvalidArgumentException('Attribute ID may only be string. Input was: ' . $id . '.');
+			throw new \InvalidArgumentException('Attribute ID may only be string.');
 		}
 
 		$id = trim($id);
 		if (empty($id)) {
-			throw new \InvalidArgumentException('Attribute ID may not be empty. Input was: ' . $id . '.');
+			throw new \InvalidArgumentException('Attribute ID may not be empty.');
 		}
 
 		$this->id = $id;
 		$this->type = $type;
-		$this->options = array();
 		$this->title = $title;
+		$this->options = array();
 	}
 
 	public function createValue($value) {
@@ -29,7 +29,7 @@ class Attribute {
 	}
 
 	public function hasOption($option) {
-		return isset($this->options[$option]);
+		return in_array($option, $this->options, true);
 	}
 
 	public function hasOptions() {
@@ -42,28 +42,47 @@ class Attribute {
 			return;
 		}
 
-		$options = array_fill_keys(array_values($options), true);
-		if ($this->hasDefaultValue() and !isset($options[$this->defaultvalue])) {
+		if ($this->type == AttributeType::TYPE_BOOLEAN) {
+			throw new \LogicException('Attribute of type boolean cannot have options.');
+		}
+
+		if ($this->hasDefaultValue() and !in_array($this->defaultvalue, $options, true)) {
 			throw new \InvalidArgumentException('Attribute default value must exist in options list.');
 		}
 
-		$this->options = $options;
+		foreach ($options as $option) {
+			$this->addOption($option);
+		}
 	}
 
 	public function addOption($option) {
-		$this->options[$option] = true;
+		if ($this->type == AttributeType::TYPE_BOOLEAN) {
+			throw new \LogicException('Attribute of type boolean cannot have options.');
+		}
+
+		if (!$this->type->canHaveValue($option)) {
+			throw new \InvalidArgumentException('Attribute of type ' . $this->type . ' cannot have option of type.');
+		}
+
+		if (!$this->hasOption($option)) {
+			$this->options[] = $option;
+		}
 	}
 
 	public function clearOptions() {
+		if (!$this->hasOptions()) {
+			return;
+		}
+
 		if ($this->hasDefaultValue()) {
-			throw new \RuntimeException('Attribute default value must be cleared first.');
+			throw new \LogicException('Attribute default value must be cleared first.');
 		}
 
 		$this->options = array();
 	}
 
 	public function getOptions() {
-		return array_keys($this->options);
+		return $this->options;
 	}
 
 	public function getDefaultValue() {
@@ -85,63 +104,36 @@ class Attribute {
 		}
 
 		if ($this->type == AttributeType::TYPE_LISTSTRING) {
+			if (!is_array($defaultvalue)) {
+				throw new \InvalidArgumentException('Attribute values must be supplied as array for attribute of type listring.');
+			}
+
 			if (empty($defaultvalue)) {
 				$this->clearDefaultValue();
 				return;
 			}
 
-			if (!$this->canHaveListStringValues($defaultvalue)) {
-				throw new \InvalidArgumentException();
+			foreach ($defaultvalue as $defaultvaluepart) {
+				if ($this->hasOptions() and !$this->hasOption($defaultvaluepart)) {
+					throw new \InvalidArgumentException('Attribute default value must exist in options list if options are set.');
+				}
+
+				if (!$this->type->canHaveValue($defaultvaluepart)) {
+					throw new \InvalidArgumentException('Attribute of type ' . $this->type . ' cannot have default value of type ' . gettype($defaultvaluepart) . '.');
+				}
 			}
 
-		} elseif (!$this->canHaveScalarValue($defaultvalue)) {
-			throw new \InvalidArgumentException('Attribute default value must exist in options list if options are set. Input was: ' . $defaultvalue . '.');
+		} else {
+			if ($this->hasOptions() and !$this->hasOption($defaultvalue)) {
+				throw new \InvalidArgumentException('Attribute default value must exist in options list if options are set.');
+			}
+
+			if (!$this->type->canHaveValue($defaultvalue)) {
+				throw new \InvalidArgumentException('Attribute of type ' . $this->type . ' cannot have default value of type ' . gettype($defaultvalue) . '.');
+			}
 		}
 
 		$this->defaultvalue = $defaultvalue;
-	}
-
-	public function canHaveValue($value) {
-		if ($this->type == AttributeType::TYPE_LISTSTRING) {
-			return $this->canHaveListStringValues($value);
-		}
-
-		return $this->canHaveScalarValue($value);
-	}
-
-	private function canHaveScalarValue($value) {
-		if ($this->type == AttributeType::TYPE_LISTSTRING) {
-			throw new \LogicException();
-		}
-
-		// Not that null will fail the is_scalar check. This is intentional.
-		if (!is_scalar($value)) {
-			throw new \InvalidArgumentException('Attribute value must be supplied as scalar for non-liststring type attribute. Input was: ' . $value . '.');
-		}
-
-		return !$this->hasOptions() or $this->hasOption($value);
-	}
-
-	private function canHaveListStringValues($values) {
-		if ($this->type != AttributeType::TYPE_LISTSTRING) {
-			throw new \LogicException();
-		}
-
-		if (!is_array($values)) {
-			throw new \InvalidArgumentException('Attribute values must be supplied as array for attribute of type listring. Input was: ' . $values . '.');
-		}
-
-		if (!$this->hasOptions()) {
-			return true;
-		}
-
-		foreach ($values as $value) {
-			if (!$this->hasOption($value)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public function getId() {
