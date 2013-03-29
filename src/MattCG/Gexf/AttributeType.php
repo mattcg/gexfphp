@@ -33,13 +33,16 @@ class AttributeType extends \SplEnum {
 			return is_string($value);
 
 		case self::TYPE_LISTSTRING:
+			if (!is_string($value)) {
+				return false;
+			}
 
 			// Liststring values may be separated by a pipe, a semicolon or a comma, so these characters are unsafe in invidual values.
 			if (preg_match('/\||;|,/', $value)) {
 				return false;
 			}
 
-			return is_string($value);
+			return true;
 
 		case self::TYPE_BOOLEAN:
 			return is_bool($value);
