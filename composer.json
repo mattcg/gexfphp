@@ -14,7 +14,8 @@
 	"require": {
 		"php": ">=5.4.0",
 		"ext-SPL_Types": "0.4.*",
-		"rhumsaa/uuid": "2.0.*"
+		"rhumsaa/uuid": "2.0.*",
+		"primal/color": "1.0.*@dev"
 	},
 	"autoload": {
 		"psr-0": {

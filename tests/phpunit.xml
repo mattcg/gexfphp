@@ -42,8 +42,16 @@
 			<file>src/MattCG/Gexf/ModeTest.php</file>
 		</testsuite>
 		<testsuite name="Edge tests">
+			<file>src/MattCG/Gexf/EdgeTest.php</file>
 			<file>src/MattCG/Gexf/EdgeTypeTest.php</file>
 			<file>src/MattCG/Gexf/EdgeShapeTest.php</file>
+		</testsuite>
+		<testsuite name="Node tests">
+			<file>src/MattCG/Gexf/NodeTest.php</file>
+			<file>src/MattCG/Gexf/NodeShapeTest.php</file>
+		</testsuite>
+		<testsuite name="Graph tests">
+			<file>src/MattCG/Gexf/IdTypeTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
