@@ -54,8 +54,14 @@ class EdgeTest extends PHPUnit_Framework_TestCase {
 	public function testSetLabel() {
 		$label = 'somelabel';
 		$edge = new Edge(1, new Node(1), new Node(2));
+		$this->assertFalse($edge->hasLabel());
+		$this->assertNull($edge->getLabel());
 		$edge->setLabel($label);
 		$this->assertEquals($label, $edge->getLabel());
+		$this->assertTrue($edge->hasLabel());
+		$edge->clearLabel();
+		$this->assertFalse($edge->hasLabel());
+		$this->assertNull($edge->getLabel());
 	}
 
 	/**
@@ -98,7 +104,55 @@ class EdgeTest extends PHPUnit_Framework_TestCase {
 	public function testSetColor() {
 		$edge = new Edge(1, new Node(1), new Node(2));
 		$color = new RGBColor(1, 2, 3);
+		$this->assertFalse($edge->hasColor());
+		$this->assertNull($edge->getColor());
 		$edge->setColor($color);
+		$this->assertTrue($edge->hasColor());
 		$this->assertEquals($color, $edge->getColor());
+		$edge->clearColor();
+		$this->assertFalse($edge->hasColor());
+		$this->assertNull($edge->getColor());
+	}
+
+	public function testSetThickness() {
+		$thickness = 1.1;
+		$edge = new Edge(1, new Node(1), new Node(2));
+		$this->assertNull($edge->getThickness());
+		$this->assertFalse($edge->hasThickness());
+		$edge->setThickness($thickness);
+		$this->assertTrue($edge->hasThickness());
+		$this->assertEquals($thickness, $edge->getThickness());
+		$edge->clearThickness();
+		$this->assertFalse($edge->hasThickness());
+		$this->assertNull($edge->getThickness());
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testSetThicknessRejectsNonFloat() {
+		$edge = new Edge(1, new Node(1), new Node(2));
+		$edge->setThickness(1);
+	}
+
+	public function testSetWeight() {
+		$weight = 1.1;
+		$edge = new Edge(1, new Node(1), new Node(2));
+		$this->assertNull($edge->getWeight());
+		$this->assertFalse($edge->hasWeight());
+		$edge->setWeight($weight);
+		$this->assertTrue($edge->hasWeight());
+		$this->assertEquals($weight, $edge->getWeight());
+		$edge->clearWeight();
+		$this->assertFalse($edge->hasWeight());
+		$this->assertNull($edge->getWeight());
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testSetWeightRejectsNonFloat() {
+		$edge = new Edge(1, new Node(1), new Node(2));
+		$edge->setWeight(1);
 	}
 }

@@ -125,11 +125,15 @@ class Edge {
 		if (!is_float($thickness)) {
 			throw new \InvalidArgumentException();
 		}
+
+		$this->thickness = $thickness;
 	}
 
 	public function setWeight($weight) {
 		if (!is_float($weight)) {
 			throw new \InvalidArgumentException();
 		}
+
+		$this->weight = $weight;
 	}
 }
