@@ -49,6 +49,7 @@
 		<testsuite name="Node tests">
 			<file>src/MattCG/Gexf/NodeTest.php</file>
 			<file>src/MattCG/Gexf/NodeShapeTest.php</file>
+			<file>src/MattCG/Gexf/PositionTest.php</file>
 		</testsuite>
 		<testsuite name="Graph tests">
 			<file>src/MattCG/Gexf/IdTypeTest.php</file>
