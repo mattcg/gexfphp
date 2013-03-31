@@ -37,7 +37,7 @@ class AttributeList implements \Iterator, \ArrayAccess, \SeekableIterator, \Coun
 	}
 
 	function rewind() {
-		rewind($this->attrs);
+		reset($this->attrs);
 	}
 
 	function valid() {

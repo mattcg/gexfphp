@@ -51,6 +51,47 @@ class AttributeListTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($attr, $attrlist[$id]);
 	}
 
+	public function testUnsetAttribute() {
+		$id = 'someid';
+		$attrtype = new AttributeType(AttributeType::TYPE_INTEGER);
+		$attrlist = new AttributeList(new AttributeClass());
+		$this->assertFalse(isset($attrlist[$id]));
+		$attrlist->addAttribute($id, $attrtype);
+		$this->assertTrue(isset($attrlist[$id]));
+		unset($attrlist[$id]);
+		$this->assertFalse(isset($attrlist[$id]));
+	}
+
+	public function testGetAttribute() {
+		$id = 'someid';
+		$attrtype = new AttributeType(AttributeType::TYPE_INTEGER);
+		$attrlist = new AttributeList(new AttributeClass());
+		$attrlist->addAttribute($id, $attrtype);
+		$this->assertTrue(isset($attrlist[$id]));
+		$attr = $attrlist[$id];
+		$this->assertInstanceOf('MattCG\Gexf\Attribute', $attr);
+		$this->assertEquals($id, $attr->getId());
+		$this->assertEquals($attr, $attrlist->offsetGet($id));
+	}
+
+	public function testIteration() {
+		$ids = array('someid1', 'someid2', 'someid3');
+		$attrtype = new AttributeType(AttributeType::TYPE_INTEGER);
+		$attrlist = new AttributeList(new AttributeClass());
+		foreach ($ids as $id) {
+			$attrlist->addAttribute($id, $attrtype);
+		}
+
+		$i = 0;
+		foreach ($attrlist as $id => $attr) {
+			$this->assertEquals($ids[$i], $attr->getId());
+			$this->assertEquals($ids[$i], $id);
+			$i++;
+		}
+
+		$this->assertEquals(count($ids), $i);
+	}
+
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
