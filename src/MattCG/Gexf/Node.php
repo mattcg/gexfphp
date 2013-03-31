@@ -34,6 +34,10 @@ class Node {
 		$this->color = null;
 	}
 
+	public function clearLabel() {
+		$this->label = null;
+	}
+
 	public function clearPid() {
 		$this->pid = null;
 	}
@@ -74,10 +78,10 @@ class Node {
 	}
 
 	public function getAllEdges() {
-		$edges = array();
-		$nodes = $node->getNodes();
+		$edges = $this->getEdges();
+		$nodes = $this->getNodes();
 		foreach ($nodes as $node) {
-			$this->getEdgesRecursive($sofar, $node);
+			$this->getEdgesRecursive($edges, $node);
 		}
 
 		return $edges;
@@ -86,7 +90,7 @@ class Node {
 	private function getEdgesRecursive(array &$sofar, Node $node) {
 		$edges = $node->getEdges();
 		foreach ($edges as $edge) {
-			$edges[$edge->getId()] = $edge;
+			$sofar[$edge->getId()] = $edge;
 		}
 
 		$nodes = $node->getNodes();
@@ -115,6 +119,12 @@ class Node {
 		return $this->nodes;
 	}
 
+	public function getNode($id) {
+		if (isset($this->nodes[$id])) {
+			return $this->nodes[$id];
+		}
+	}
+
 	public function getPid() {
 		return $this->pid;
 	}
@@ -124,7 +134,7 @@ class Node {
 	}
 
 	public function getShape() {
-		return $this->shape();
+		return $this->shape;
 	}
 
 	public function getSize() {
@@ -133,6 +143,10 @@ class Node {
 
 	public function hasColor() {
 		return !is_null($this->color);
+	}
+
+	public function hasLabel() {
+		return !is_null($this->label);
 	}
 
 	public function hasPid() {
@@ -190,9 +204,15 @@ class Node {
 		$this->position = $position;
 	}
 
+	public function setShape(NodeShape $shape) {
+		$this->shape = $shape;
+	}
+
 	public function setSize($size) {
 		if (!is_float($size)) {
 			throw new \InvalidArgumentException();
 		}
+
+		$this->size = $size;
 	}
 }
