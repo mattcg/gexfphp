@@ -16,14 +16,6 @@ class AttributeList implements \Iterator, \ArrayAccess, \SeekableIterator, \Coun
 
 	private $mode, $attrclass, $attrs;
 
-	function append($value) {
-		if (!($value instanceof Attribute)) {
-			throw new \InvalidArgumentException();
-		}
-
-		$this->attrs[$value->getId()] = $value;
-	}
-
 	/* Countable interface */
 
 	function count() {
