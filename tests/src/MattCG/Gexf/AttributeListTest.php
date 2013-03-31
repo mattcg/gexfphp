@@ -82,6 +82,8 @@ class AttributeListTest extends PHPUnit_Framework_TestCase {
 			$attrlist->addAttribute($id, $attrtype);
 		}
 
+		$this->assertEquals(count($ids), count($attrlist));
+
 		$i = 0;
 		foreach ($attrlist as $id => $attr) {
 			$this->assertEquals($ids[$i], $attr->getId());

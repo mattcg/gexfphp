@@ -33,7 +33,7 @@ class AttributeValueList implements \Iterator, \ArrayAccess, \SeekableIterator, 
 	}
 
 	function rewind() {
-		rewind($this->attrvalues);
+		reset($this->attrvalues);
 	}
 
 	function valid() {
