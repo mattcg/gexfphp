@@ -52,6 +52,7 @@
 			<file>src/MattCG/Gexf/PositionTest.php</file>
 		</testsuite>
 		<testsuite name="Graph tests">
+			<file>src/MattCG/Gexf/GraphTest.php</file>
 			<file>src/MattCG/Gexf/IdTypeTest.php</file>
 		</testsuite>
 	</testsuites>

@@ -6,10 +6,6 @@
 
 namespace MattCG\Gexf;
 
-use MattCG\Gexf\Attribute;
-use MattCG\Gexf\AttributeClass;
-use MattCG\Gexf\AttributeType;
-
 use Rhumsaa\Uuid\Uuid;
 
 class AttributeList implements \Iterator, \ArrayAccess, \SeekableIterator, \Countable {
