@@ -55,5 +55,9 @@
 			<file>src/MattCG/Gexf/GraphTest.php</file>
 			<file>src/MattCG/Gexf/IdTypeTest.php</file>
 		</testsuite>
+		<testsuite name="Gexf tests">
+			<file>src/MattCG/Gexf/MetadataTest.php</file>
+			<file>src/MattCG/Gexf/GexfTest.php</file>
+		</testsuite>
 	</testsuites>
 </phpunit>
