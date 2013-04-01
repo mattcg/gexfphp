@@ -36,10 +36,6 @@ class Gexf {
 		return $this->graph;
 	}
 
-	public function getVisualization() {
-		return (bool) $this->viz;
-	}
-
 	public function setVisualization($viz) {
 		$this->viz = $viz;
 	}

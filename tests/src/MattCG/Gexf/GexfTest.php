@@ -26,9 +26,7 @@ class GexfTest extends PHPUnit_Framework_TestCase {
 	public function testSetVisualization() {
 		$gexf = new Gexf();
 		$this->assertFalse($gexf->hasVisualization());
-		$this->assertFalse($gexf->getVisualization());
 		$gexf->setVisualization(true);
 		$this->assertTrue($gexf->hasVisualization());
-		$this->assertTrue($gexf->getVisualization());
 	}
 }
