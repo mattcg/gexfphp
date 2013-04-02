@@ -101,6 +101,10 @@ class AttributeList implements \Iterator, \ArrayAccess, \SeekableIterator, \Coun
 		$this->mode = $mode;
 	}
 
+	public function hasMode() {
+		return !is_null($this->mode);
+	}
+
 	public function getMode() {
 		return $this->mode;
 	}

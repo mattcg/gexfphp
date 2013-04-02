@@ -85,6 +85,14 @@ class Edge {
 		return !is_null($this->color);
 	}
 
+	public function hasEdgeType() {
+		return !is_null($this->edgetype);
+	}
+
+	public function hasShape() {
+		return !is_null($this->shape);
+	}
+
 	public function hasLabel() {
 		return !is_null($this->label);
 	}

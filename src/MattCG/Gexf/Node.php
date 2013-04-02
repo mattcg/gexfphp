@@ -11,7 +11,7 @@ use Primal\Color\Color;
 
 class Node {
 
-	private $id, $label, $color, $pid, $position, $shape, $size, $nodes, $edges;
+	private $id, $label, $color, $pid, $position, $shape, $size, $nodes, $edges, $attrvaluelist;
 
 	public function __construct($id) {
 		if (!is_string($id) and !is_int($id)) {
@@ -214,5 +214,17 @@ class Node {
 		}
 
 		$this->size = $size;
+	}
+
+	public function hasAttributeValues() {
+		return !is_null($this->attrvaluelist) and count($this->attrvaluelist) > 0;
+	}
+
+	public function getAttributeValueList() {
+		if (is_null($this->attrvaluelist)) {
+			$this->attrvaluelist = new AttributeValueList();
+		}
+
+		return $this->attrvaluelist;
 	}
 }

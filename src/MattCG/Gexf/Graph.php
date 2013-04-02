@@ -110,6 +110,31 @@ class Graph {
 		}
 	}
 
+	public function hasAttributes() {
+		foreach ($this->attrlists as $attrlist) {
+			if (count($attrlist) > 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function getAttributeLists() {
+		$attrlists = array();
+		foreach ($this->attrlists as $attrlist) {
+			if (count($attrlist) > 0) {
+				$attrlists[] = $attrlist;
+			}
+		}
+
+		if (count($attrlists) > 0) {
+			return $attrlists;
+		}
+
+		return null;
+	}
+
 	public function getAttributeList(AttributeClass $attrclass = null) {
 		if (is_null($attrclass)) {
 			$attrclass = new AttributeClass();
