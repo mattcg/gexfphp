@@ -597,6 +597,7 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @expectedExceptionMessage Attribute default value must exist in options list.
 	 */
 	public function testCannotSetOptionsNotContainingCurrentDefaultValue() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
@@ -605,13 +606,48 @@ class AttributeTest extends PHPUnit_Framework_TestCase {
 		$attr->setOptions($options);
 	}
 
+	public function testSetOptionsContainingCurrentDefaultValue() {
+		$options = array('someoption1', 'someoption2', 'someoption3');
+		$defaultvalue = $options[2];
+		$attr = new Attribute('someid', new AttributeType());
+		$attr->setDefaultValue($defaultvalue);
+
+		try {
+			$attr->setOptions($options);
+		} catch (InvalidArgumentException $e) {
+			$this->fail('Failed to set options.');
+			return;
+		}
+
+		$this->assertEquals($options, $attr->getOptions());
+		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
+	}
+
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @expectedExceptionMessage Attribute default value must exist in options list.
 	 */
 	public function testCannotSetOptionsNotContainingCurrentDefaultValueForListring() {
 		$options = array('someoption1', 'someoption2', 'someoption3');
 		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
-		$attr->setDefaultValue(array('someoption4'));
+		$attr->setDefaultValue(array('someoption4', 'someoption5'));
 		$attr->setOptions($options);
+	}
+
+	public function testSetOptionsContainingCurrentDefaultValueForListString() {
+		$options = array('someoption1', 'someoption2', 'someoption3');
+		$defaultvalue = array($options[2], $options[1]);
+		$attr = new Attribute('someid', new AttributeType(AttributeType::TYPE_LISTSTRING));
+		$attr->setDefaultValue($defaultvalue);
+
+		try {
+			$attr->setOptions($options);
+		} catch (InvalidArgumentException $e) {
+			$this->fail('Failed to set options.');
+			return;
+		}
+
+		$this->assertEquals($options, $attr->getOptions());
+		$this->assertEquals($defaultvalue, $attr->getDefaultValue());
 	}
 }
