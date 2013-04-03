@@ -52,8 +52,13 @@ class Attribute {
 			throw new \LogicException('Attribute of type boolean cannot have options.');
 		}
 
-		if ($this->hasDefaultValue() and !in_array($this->defaultvalue, $options, true)) {
-			throw new \InvalidArgumentException('Attribute default value must exist in options list.');
+		if ($this->hasDefaultValue()) {
+
+			// Check that the all options in the default value are in the provided options (liststring attributes have an array of default values, whereas others have a scalar default value).
+			$defaultvaluearr = (array) $this->defaultvalue;
+			if (array_intersect($defaultvaluearr, $options) != $defaultvaluearr) {
+				throw new \InvalidArgumentException('Attribute default value must exist in options list.');
+			}
 		}
 
 		foreach ($options as $option) {
