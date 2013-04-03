@@ -11,6 +11,10 @@ class Gexf {
 	private $metadata, $graph, $viz;
 	protected $version = "1.2";
 
+	public function __construct() {
+		$this->viz = false;
+	}
+
 	public function getMetadata() {
 		if (is_null($this->metadata)) {
 			$this->metadata = new Metadata();
