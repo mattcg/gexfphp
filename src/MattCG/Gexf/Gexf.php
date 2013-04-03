@@ -11,11 +11,6 @@ class Gexf {
 	private $metadata, $graph, $viz;
 	protected $version = "1.2";
 
-	public function __construct() {
-		$this->graph = new Graph();
-		$this->viz = new \SplBool();
-	}
-
 	public function getMetadata() {
 		if (is_null($this->metadata)) {
 			$this->metadata = new Metadata();
@@ -33,14 +28,22 @@ class Gexf {
 	}
 
 	public function getGraph() {
+		if (is_null($this->graph)) {
+			$this->graph = new Graph();
+		}
+
 		return $this->graph;
 	}
 
 	public function setVisualization($viz) {
+		if (!is_bool($viz)) {
+			throw new \InvalidArgumentException();
+		}
+
 		$this->viz = $viz;
 	}
 
 	public function hasVisualization() {
-		return (bool) $this->viz;
+		return $this->viz;
 	}
 }
