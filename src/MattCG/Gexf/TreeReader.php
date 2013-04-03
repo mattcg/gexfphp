@@ -25,20 +25,20 @@ class TreeReader {
 		$parser = $this->parser;
 		switch ($parser->nodeType) {
 		case self::ELEMENT:
-			$this->startEntity();
+			$this->startObject();
 			break;
 
 		case self::END_ELEMENT:
-			$this->closeEntity();
+			$this->closeObject();
 			break;
 		}
 	}
 
-	private function startEntity() {
+	private function startObject() {
 		array_push($this->inside, $parser->name);
 	}
 
-	private function closeEntity() {
+	private function closeObject() {
 		$name = array_pop($this->inside);
 	}
 }

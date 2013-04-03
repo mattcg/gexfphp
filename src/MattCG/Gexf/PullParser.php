@@ -8,24 +8,56 @@ namespace MattCG\Gexf;
 
 class PullParser extends \XMLReader {
 
-	public $entity;
+	public $object;
+	private $inside;
 
 	public function __construct($uri) {
+		$this->inside = array();
 		$this->open($uri);
 		$this->setParserProperty(self::SUBST_ENTITIES, true);
 	}
 
 	public function read() {
-		if (parent::read() and $this->nodeType == self::ELEMENT) {
-			$this->entity = $this->readElement();
-			return true;
+		if (parent::read()) {
+			switch ($this->nodeType) {
+			case self::ELEMENT:
+				array_push($this->inside, $this->name);
+				$this->object = $this->readElement();
+				return true;
+
+			case self::END_ELEMENT:
+				array_pop($this->inside);
+				break;
+			}
 		}
 
 		return false;
 	}
 
 	private function readGexfElement() {
-		
+		return new Gexf();
+	}
+
+	private function readGraphElement() {
+		$graph = new Graph();
+		while ($this->moveToNextAttribute()) {
+			switch ($this->name) {
+			case 'timeformat':
+				$graph->setTimeFormat(new TimeFormat($this->value));
+				break;
+			case 'defaultedgetype':
+				$graph->setDefaultEdgeType(new EdgeType($this->value));
+				break;
+			case 'idtype':
+				$graph->setIdType(new IdType($this->value));
+				break;
+			case 'mode':
+				$graph->setMode(new Mode($this->value));
+				break;
+			}
+		}
+
+		return $graph;
 	}
 
 	private function readElement() {
@@ -34,7 +66,7 @@ class PullParser extends \XMLReader {
 			return $this->readGexfElement();
 
 		case 'graph':
-			break;
+			return $this->readGraphElement();
 
 		case 'meta':
 			break;
