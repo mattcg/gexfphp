@@ -8,8 +8,7 @@ namespace MattCG\Gexf;
 
 class PullParser extends \XMLReader {
 
-	public $object;
-	private $inside;
+	public $inside;
 
 	public function __construct($uri) {
 		$this->inside = array();
@@ -17,15 +16,13 @@ class PullParser extends \XMLReader {
 		$this->setParserProperty(self::SUBST_ENTITIES, true);
 	}
 
-	public function read() {
-		if (parent::read()) {
-			return $this->readElement();
+	public function readElement() {
+
+		// Exit early if there's nothing to read.
+		if (!$this->read()) {
+			return false;
 		}
 
-		return false;
-	}
-
-	private function readElement() {
 		do {
 			$handled = $this->switchElement();
 			if ($handled) {
@@ -34,32 +31,121 @@ class PullParser extends \XMLReader {
 
 		// Skip to the next element unless the end of the document has been reached.
 		} while ($this->next());
+
+		// Return false if there's nothing to read.
+		return false;
 	}
 
 	private function switchElement() {
-		switch ($this->name) {
-		case 'gexf':
-		case 'graph':
-		case 'meta':
-		case 'content':
-		case 'description':
-		case 'keywords':
-		case 'attributes':
-		case 'attribute':
-		case 'nodes':
-		case 'node':
-		case 'edges':
-		case 'edge':
-			true;
+		$parent = end($this->inside);
+		$child = $this->name;
+
+		switch ($this->nodeType) {
+		case self::ELEMENT:
+			if (!$this->isHandled($parent, $child)) {
+				return false;
+			}
+
+			if (!$this->isEmptyElement) {
+				array_push($this->inside, $child);
+			}
+
+			return true;
+
+		case self::END_ELEMENT:
+			assert($parent === $child);
+			array_pop($this->inside);
+			return false;
 		}
 	}
 
-	private function readGexf() {
-		return new Gexf();
+	private function isHandled($parent, $child) {
+		switch ($parent) {
+		case 'gexf':
+			switch ($child) {
+			case 'graph':
+			case 'meta':
+				return !$this->isEmptyElement;
+			}
+
+			return false;
+
+		case 'graph':
+			switch ($child) {
+			case 'nodes':
+			case 'edges':
+			case 'attributes':
+				return !$this->isEmptyElement;
+			}
+
+			return false;
+
+		case 'meta':
+			switch ($child) {
+			case 'content':
+			case 'description':
+			case 'keywords':
+				return !$this->isEmptyElement;
+			}
+
+			return false;
+
+		case 'attributes':
+			switch ($child) {
+			case 'attribute':
+				return true;
+			}
+
+			return false;
+
+		case 'attribute':
+			switch ($child) {
+			case 'options':
+			case 'default':
+				return !$this->isEmptyElement;
+			}
+
+			return false;
+
+		case 'nodes':
+			return 'node' === $child;
+
+		case 'node':
+			switch ($child) {
+			case 'nodes':
+			case 'attvalues':
+				return !$this->isEmptyElement;
+			case 'viz:color':
+			case 'viz:position':
+			case 'viz:size':
+			case 'viz:shape':
+				return true;
+			}
+
+			return false;
+
+		case 'attvalues':
+			return 'attvalue' === $child;
+
+		case 'edges':
+			return 'edge' === $child;
+
+		case 'edge':
+			switch ($child) {
+			case 'viz:color':
+			case 'viz:thickness':
+			case 'viz:shape':
+				return true;
+			}
+
+			return false;
+
+		default:
+			return false;
+		}
 	}
 
-	private function readGraph() {
-		$graph = new Graph();
+	public function readAttributesIntoGraph(Graph $graph) {
 		while ($this->moveToNextAttribute()) {
 			switch ($this->name) {
 			case 'timeformat':
@@ -76,12 +162,9 @@ class PullParser extends \XMLReader {
 				break;
 			}
 		}
-
-		return $graph;
 	}
 
-	private function readMetadata() {
-		$metadata = new Metadata();
+	public function readAttributesIntoMetadata(Metadata $metadata) {
 
 		// Read the last modified date attribute.
 		$lastmodifieddate = $this->getAttribute('lastmodifieddate');
@@ -93,119 +176,22 @@ class PullParser extends \XMLReader {
 				$metadata->setLastModified(new \DateTime($lastmodifiedtime));
 			}
 		}
-
-		// Nothing else to do for empty <meta />.
-		if ($this->isEmptyElement) {
-			return $metadata;
-		}
-
-		$metadepth = $this->depth;
-		$skipped = false;
-		while ($skipped or parent::read()) {
-			if ($skipped) {
-				$skipped = false;
-			}
-
-			if (self::END_ELEMENT === $this->nodeType) {
-
-				// Return the object when <meta> should be closed.
-				if ('meta' === $this->name) {
-					return $metadata;
-				}
-
-				continue;
-			}
-
-			if (self::ELEMENT !== $this->nodeType) {
-
-				// Non-elements below <meta> are unimporant.
-				continue;
-			}
-
-			// Sanity check - should stay below <meta> element depth.
-			assert($this->depth < $metadepth);
-
-			if ($this->isEmptyElement) {
-
-				// Empty elements below <meta> are unimporant.
-				continue;
-			}
-
-			switch ($this->name) {
-			default:
-
-				// Default case: for an unhandled element below <meta>, jump to the next element, skipping the subtree of the current element.
-				$skipped = true;
-				$this->next();
-				break;
-
-			case 'creator':
-				$metadata->setCreator($this->value);
-				break;
-
-			case 'keywords':
-				$metadata->setKeywords(explode(', ', $this->value));
-				break;
-
-			case 'description':
-				$metadata->setDescription($this->value);
-				break;
-			}
-		}
 	}
 
-	private function readAttributes() {
-		$class = $this->getAttribute('class');
-		$attrlist = new AttributeList(new AttributeClass($class));
+	public function readAttributesIntoAttributeList(Graph $graph) {
+		$attrclass = new AttributeClass($this->getAttribute('class'));
+
+		$attrlist = $graph->createAttributeList($attrclass);
 
 		$mode = $this->getAttribute('mode');
 		if ($mode) {
 			$attrlist->setMode(new Mode($mode));
 		}
 
-		// Nothing else to do for empty <attributes />.
-		if ($this->isEmptyElement) {
-			return $attrlist;
-		}
-
-		$attributesdepth = $this->depth;
-		$skipped = false;
-		while ($skipped or parent::read()) {
-			if ($skipped) {
-				$skipped = false;
-			}
-
-			if (self::END_ELEMENT === $this->nodeType) {
-
-				// Return the object when <attributes> should be closed.
-				if ('attributes' === $this->name) {
-					return $attrlist;
-				}
-
-				continue;
-			}
-
-			if (self::ELEMENT !== $this->nodeType) {
-
-				// Non-elements below <attributes> are unimporant.
-				continue;
-			}
-
-			// Sanity check - should stay below <attributes> element depth.
-			assert($this->depth < $attributesdepth);
-	
-			if ('attribute' === $this->name) {
-				$this->readAttribute($attrlist);
-			} else {
-
-				// For an unhandled element below <attributes>, jump to the next element, skipping the subtree of the current element.
-				$skipped = true;
-				$this->next();
-			}
-		}
+		return $attrlist;
 	}
 
-	private function readAttribute(AttributeList $attrlist) {
+	public function readAttributesIntoAttribute(AttributeList $attrlist) {
 		$id = $attrtype = $title = null;
 
 		while ($this->moveToNextAttribute()) {
@@ -234,128 +220,38 @@ class PullParser extends \XMLReader {
 		}
 
 		$attrlist->addAttribute($id, $attrtype, $title);
-
-		// Nothing else to do for empty <attribute />.
-		if ($this->isEmptyElement) {
-			return;
-		}
-
-		$attr = $attrlist[$id];
-
-		$attrdepth = $this->depth;
-		$skipped = false;
-		while ($skipped or parent::read()) {
-			if ($skipped) {
-				$skipped = false;
-			}
-
-			if (self::END_ELEMENT === $this->nodeType) {
-
-				// Return when <attribute> should be closed.
-				if ('attribute' === $this->name) {
-					return;
-				}
-
-				continue;
-			}
-
-			if (self::ELEMENT !== $this->nodeType) {
-
-				// Non-elements below <attribute> are unimporant.
-				continue;
-			}
-
-			// Sanity check - should stay below <attribute> element depth.
-			assert($this->depth < $attrdepth);
-
-			if ($this->isEmptyElement) {
-
-				// Empty elements below <attribute> are unimporant.
-				continue;
-			}
-
-			switch ($this->name) {
-			default:
-
-				// Default case: for an unhandled element below <attribute>, jump to the next element, skipping the subtree of the current element.
-				$skipped = true;
-				$this->next();
-				break;
-
-			case 'default':
-				$attr->setDefaultValue($attrtype->convertToType($this->value));
-				break;
-
-			case 'options':
-				$attr->setOptions(AttributeType::parseListString($this->value));
-				break;
-			}
-		}
+		return $attrlist[$id];
 	}
 
-	private function readNodes(Node $node = null) {
-		$count = $this->gettAttribute('count');
-		if ($count !== null) {
-			$count = (int) $count;
-		}
-
-		// Nothing else to do for empty <nodes />.
-		if ($count === 0 or $this->isEmptyElement) {
-			return;
-		}
-
-		$nodesdepth = $this->depth;
-		$skipped = false;
-		parent::read();
-		do {
-			if ($skipped) {
-				$skipped = false;
-			}
-
-			if (self::ELEMENT !== $this->nodeType) {
-
-				// Return when <nodes> should be closed.
-				if (self::END_ELEMENT === $this->nodeType and 'nodes' === $this->name) {
-					return;
-				}
-
-				// Non-elements below <nodes> are unimporant.
-				$skipped = true;
-				$this->next();
-				continue;
-			}
-
-			// Sanity check - should stay below <nodes> element depth.
-			assert($this->depth < $nodesdepth);
-
-			if ('node' !== $this->name) {
-
-				// Default case: for an unhandled element below <attribute>, jump to the next element, skipping the subtree of the current element.
-				$skipped = true;
-				$this->next();
-			} else {
-				return $this->readNode();
-			}
-		} while ($skipped);
-	}
-
-	private function readNode() {
+	public function readAttributesIntoNode(Node $parentnode = null) {
 		$id = $this->getAttribute('id');
-		$node = new Node($id);
+		if ($parentnode) {
+			$node = $parentnode->createNode($id);
+		} else {
+			$node = new Node($id);
+		}
 
 		$label = $this->getAttribute('label');
 		if ($label) {
 			$node->setLabel($label);
 		}
 
-		$pid = end($this->nodeLevels);
-		if ($pid) {
-			$node->setPid($pid);
+		return $node;
+	}
+
+	public function readAttributesIntoAttributeValue(AttributeList $attrlist, AttributeValueList $attrvaluelist) {
+		$id = $this->getAttribute('for');
+		if (!isset($attrlist[$id])) {
+			trigger_error('Unknown attribute ID.', E_USER_NOTICE);
+			$this->next();
+			return;
 		}
 
-		// Dive into the node.
-		array_push($this->nodeLevels, $id);
+		$attr = $attrlist[$id];
+		$attrvaluelist->createValue($attr, $this->getAttribute('value'));
+	}
 
-		return $node;
+	public function readAttributesIntoEdge() {
+
 	}
 }

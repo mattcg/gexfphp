@@ -120,35 +120,14 @@ class Graph {
 		return false;
 	}
 
-	public function getNonEmptyAttributeLists() {
-		$attrlists = array();
-		foreach ($this->attrlists as $attrlist) {
-			if (count($attrlist) > 0) {
-				$attrlists[] = $attrlist;
-			}
-		}
-
-		if (count($attrlists) > 0) {
-			return $attrlists;
-		}
+	public function getAttributeLists() {
+		return $this->attrlists;
 	}
 
 	public function createAttributeList(AttributeClass $attrclass) {
-		$attrclass_str = (string) $attrclass;
-		if (isset($this->attrlists[$attrclass_str])) {
-			return $this->attrlists[$attrclass_str];
-		}
-
 		$attrlist = new AttributeList($attrclass);
-		$this->attrlists[$attrclass_str] = $attrlist;
+		$this->attrlists[] = $attrlist;
 
 		return $attrlist;
-	}
-
-	public function getAttributeList(AttributeClass $attrclass) {
-		$attrclass_str = (string) $attrclass;
-		if (isset($this->attrlists[$attrclass_str])) {
-			return $this->attrlists[$attrclass_str];
-		}
 	}
 }
