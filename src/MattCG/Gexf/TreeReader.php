@@ -21,24 +21,29 @@ class TreeReader {
 		}
 	}
 
-	private function readElement() {
+	private function readObject() {
 		$parser = $this->parser;
-		switch ($parser->nodeType) {
-		case self::ELEMENT:
-			$this->startObject();
+
+		switch ($parser->name) {
+		case 'gexf':
+			return $this->gexf = $parser->object;
+
+		case 'graph':
+			return $this->readGraph();
+
+		case 'meta':
+			return $this->readMetadata();
 			break;
 
-		case self::END_ELEMENT:
-			$this->closeObject();
-			break;
+		case 'attributes':
+			return $this->readAttributes();
+
+		case 'nodes':
+
+			// Will return the first node
+			return $this->readNodes();
+		case 'node':
+			return $this->readNode();
 		}
-	}
-
-	private function startObject() {
-		array_push($this->inside, $parser->name);
-	}
-
-	private function closeObject() {
-		$name = array_pop($this->inside);
 	}
 }

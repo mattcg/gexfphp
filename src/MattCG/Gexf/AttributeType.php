@@ -55,4 +55,48 @@ class AttributeType extends \SplEnum {
 			throw new \LogicException('Unhandled type: ' . $this . '.');
 		}
 	}
+
+	public static function parseListString($liststring) {
+		if (empty($liststring)) {
+			return array();
+		}
+
+		preg_match('/(\||,|;)/', $liststring, $matches);
+		if ($matches and isset($matches[1])) {
+			return explode($liststring, $matches[1]);
+		}
+
+		return array($liststring);
+	}
+
+	public function convertToType($value) {
+		switch ((string) $this) {
+		case self::TYPE_DOUBLE:
+			return (double) $value;
+
+		case self::TYPE_FLOAT:
+			return (float) $value;
+
+		case self::TYPE_INTEGER:
+		case self::TYPE_LONG:
+			return (int) $value;
+
+		case self::TYPE_STRING:
+		case self::TYPE_ANYURI:
+			return (string) $value;
+
+		case self::TYPE_LISTSTRING:
+			return self::parseListString($value);
+
+		case self::TYPE_BOOLEAN:
+			if (is_string($value)) {
+				return $value === 'true';
+			}
+
+			return (bool) $value;
+
+		default:
+			throw new \LogicException('Unhandled type: ' . $this . '.');
+		}
+	}
 }

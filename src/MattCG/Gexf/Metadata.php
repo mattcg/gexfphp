@@ -90,7 +90,7 @@ class Metadata {
 		$this->keywords[] = $keyword;
 	}
 
-	public function setKeywords($keywords) {
+	public function setKeywords(array $keywords) {
 		foreach ($keywords as $keyword) {
 			$this->addKeyword($keyword);
 		}
