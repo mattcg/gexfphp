@@ -26,64 +26,31 @@ class PullParser extends \XMLReader {
 	}
 
 	private function readElement() {
-		$skipped = false;
-
 		do {
-			switch ($this->nodeType) {
-			case self::ELEMENT:
-				$this->object = $this->switchElement();
-
-				// If no object was returned, skip to the next element.
-				if (!$this->object) {
-
-					// Check if the end of the document has been reached.
-					if (!$this->next()) {
-						return false;
-					}
-
-					$skipped = true;
-					continue;
-				}
-	
+			$handled = $this->switchElement();
+			if ($handled) {
 				return true;
-	
-			case self::END_ELEMENT:
-				if ('node' == $this->name) {
-					array_pop($this->nodeLevels);
-				}
-
-				// Check if the end of the document has been reached.
-				if (!$this->next()) {
-					return false;
-				}
-
-				$skipped = true;
-				continue;
 			}
-		} while ($skipped);
+
+		// Skip to the next element unless the end of the document has been reached.
+		} while ($this->next());
 	}
 
 	private function switchElement() {
 		switch ($this->name) {
 		case 'gexf':
-			return $this->readGexf();
-
 		case 'graph':
-			return $this->readGraph();
-
 		case 'meta':
-			return $this->readMetadata();
-			break;
-
+		case 'content':
+		case 'description':
+		case 'keywords':
 		case 'attributes':
-			return $this->readAttributes();
-
+		case 'attribute':
 		case 'nodes':
-
-			// Will return the first node
-			return $this->readNodes();
 		case 'node':
-			return $this->readNode();
+		case 'edges':
+		case 'edge':
+			true;
 		}
 	}
 
