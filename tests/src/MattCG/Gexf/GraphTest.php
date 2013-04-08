@@ -86,16 +86,11 @@ class GraphTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
-	public function testGetAttributeList() {
+	public function testGetAttributeLists() {
 		$graph = new Graph();
 		$attrclass = new AttributeClass(AttributeClass::CLASS_EDGE);
-		$attrlist = $graph->getAttributeList($attrclass);
+		$attrlist = $graph->createAttributeList($attrclass);
 		$this->assertEquals($attrclass, $attrlist->getAttributeClass());
-		$this->assertEquals($attrlist, $graph->getAttributeList($attrclass));
-		$attrlist = $graph->getAttributeList();
-		$this->assertEquals(AttributeClass::CLASS_NODE, (string) $attrlist->getAttributeClass());
-		$attrclass = new AttributeClass(AttributeClass::CLASS_NODE);
-		$this->assertEquals($attrlist, $graph->getAttributeList($attrclass));
 	}
 
 	public function testGetAllEdges() {
