@@ -8,7 +8,7 @@ If you're into pull parsing and StAX, please do contribute.
 
 ```bash
 sudo pecl install SPL_Types
-cd gexf/
+cd gexfphp/
 composer install --prefer-dist
 ```
 
